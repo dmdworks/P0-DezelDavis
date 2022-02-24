@@ -4,6 +4,9 @@ import com.revature.beans.User;
 import com.revature.dao.AccountDao;
 import com.revature.dao.UserDao;
 
+import com.revature.exceptions.UsernameAlreadyExistsException;
+import com.revature.exceptions.InvalidCredentialsException;
+
 /**
  * This class should contain the business logic for performing operations on users
  */
@@ -23,7 +26,14 @@ public class UserService {
 	 * @return the User who is now logged in
 	 */
 	public User login(String username, String password) {
-		return null;
+		User chkUser = userDao.getUser(username, password);
+		if(chkUser == null) {
+			throw new InvalidCredentialsException();
+		}else if(!chkUser.getPassword().equals(password)){
+			throw new InvalidCredentialsException();
+		}else {
+			return chkUser;
+		}
 	}
 	
 	/**
@@ -32,6 +42,11 @@ public class UserService {
 	 * @throws UsernameAlreadyExistsException if the given User's username is taken
 	 */
 	public void register(User newUser) {
-		
+		User chkUser = userDao.getUser(newUser.getUsername(), newUser.getPassword());
+		if(chkUser != null) {
+			throw new UsernameAlreadyExistsException();
+		}else {
+			userDao.addUser(newUser);
+		}
 	}
 }
