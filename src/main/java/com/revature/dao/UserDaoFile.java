@@ -24,22 +24,8 @@ public class UserDaoFile implements UserDao {
 	FileInputStream userInFile;
 	ObjectInputStream userInput;
 
-	@SuppressWarnings("unchecked")
 	public User addUser(User user) {
-		
-		try{
-			userInFile = new FileInputStream(fileLocation);
-			userInput = new ObjectInputStream(userInFile);
-			
-			userList = (List<User>)userInput.readObject();
-			userInput.close();
-		}catch(FileNotFoundException e) {
-			System.out.println("Users file is missing/in wrong location");
-		}catch(IOException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}catch(ClassNotFoundException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}
+		userList = getAllUsers();
 		
 		userList.add(user);
 	
@@ -58,22 +44,8 @@ public class UserDaoFile implements UserDao {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public User getUser(Integer userId) {
-		
-		try{
-			userInFile = new FileInputStream(fileLocation);
-			userInput = new ObjectInputStream(userInFile);
-			
-			userList = (List<User>)userInput.readObject();
-			userInput.close();
-		}catch(FileNotFoundException e) {
-			System.out.println("Users file is missing/in wrong location");
-		}catch(IOException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}catch(ClassNotFoundException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}
+		userList = getAllUsers();
 		
 		for(User u: userList) {
 			if(u.getId().equals(userId)) {
@@ -84,23 +56,9 @@ public class UserDaoFile implements UserDao {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public User getUser(String username, String pass) {
-		
-		try{
-			userInFile = new FileInputStream(fileLocation);
-			userInput = new ObjectInputStream(userInFile);
-			
-			userList = (List<User>)userInput.readObject();
-			userInput.close();
-		}catch(FileNotFoundException e) {
-			System.out.println("Users file is missing/in wrong location");
-		}catch(IOException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}catch(ClassNotFoundException e) {
-			System.out.println("An exception was thrown: "+e.getMessage());
-		}
-		
+		userList = getAllUsers();
+
 		for(User u: userList) {
 			if(u.getUsername().equals(username)) {
 				return u;

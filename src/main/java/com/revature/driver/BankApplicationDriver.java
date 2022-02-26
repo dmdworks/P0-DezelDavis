@@ -4,6 +4,8 @@ package com.revature.driver;
  * This is the entry point to the application
  */
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.revature.beans.User;
 import com.revature.services.UserService;
@@ -13,6 +15,7 @@ import com.revature.dao.AccountDaoFile;
 public class BankApplicationDriver {
 
 	public static void main(String[] args) {
+		//boolean running = true;
 		Scanner sc = new Scanner(System.in);
 		UserDaoFile userDao = new UserDaoFile();
 		AccountDaoFile accountDao = new AccountDaoFile();
@@ -53,6 +56,14 @@ public class BankApplicationDriver {
 				
 				userSrv.register(newUser);
 				System.out.println("Account created, "+newUser.getUsername());
+				break;
+			case 3:
+				List<User> allUsers = new ArrayList<>();
+				
+				allUsers = userDao.getAllUsers();
+				for(User u: allUsers) {
+					System.out.println(u);
+				}
 				break;
 			default:
 				System.out.println("Invailed option.");

@@ -176,5 +176,6 @@ $RECYCLE.BIN/
 *.lnk
 
 Users.txt
+Accounts.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java,eclipse,git,maven
