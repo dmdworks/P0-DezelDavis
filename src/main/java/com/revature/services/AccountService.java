@@ -9,7 +9,9 @@ import com.revature.dao.AccountDao;
 import com.revature.exceptions.OverdraftException;
 
 import com.revature.beans.Transaction;
-import com.revature.dao.TransactionDaoFile;
+
+import com.revature.utils.SessionCache;
+import com.revature.exceptions.UnauthorizedException;
 
 /**
  * This class should contain the business logic for performing operations on Accounts
@@ -48,6 +50,8 @@ public class AccountService {
 			transList.add(newTran);
 			a.setTransactions(transList);
 			transList = null;
+			
+			actDao.updateAccount(a);
 		}
 	}
 	
@@ -76,6 +80,8 @@ public class AccountService {
 			transList.add(newTran);
 			a.setTransactions(transList);
 			transList = null;
+			
+			actDao.updateAccount(a);
 		}
 	}
 	
@@ -104,9 +110,6 @@ public class AccountService {
 			newTran.setRecipient(toAct);
 			newTran.setTimestamp();
 			
-			fromAct.getTransactions().add(newTran);
-			toAct.getTransactions().add(newTran);
-			
 			transList = fromAct.getTransactions();
 			transList.add(newTran);
 			fromAct.setTransactions(transList);
@@ -116,6 +119,9 @@ public class AccountService {
 			transList.add(newTran);
 			toAct.setTransactions(transList);
 			transList = null;
+			
+			actDao.updateAccount(toAct);
+			actDao.updateAccount(fromAct);
 		}
 		
 	}
@@ -130,10 +136,12 @@ public class AccountService {
 		newAcc.setOwnerId(u.getId());
 		newAcc.setBalance(STARTING_BALANCE);
 		newAcc.setType(Account.AccountType.CHECKING);
-		newAcc.setApproved(true);
+		newAcc.setApproved(false);
 		newAcc.setId(Math.abs(newAcc.hashCode()));
 		
-		accList = u.getAccounts();
+		actDao.addAccount(newAcc);
+		
+		accList = actDao.getAccountsByUser(u);
 		accList.add(newAcc);
 		u.setAccounts(accList);
 		accList = null;
@@ -149,7 +157,12 @@ public class AccountService {
 	 * @return true if account is approved, or false if unapproved
 	 */
 	public boolean approveOrRejectAccount(Account a, boolean approval) {
-		
-		return false;
+		if(SessionCache.getCurrentUser().get().getUserType().equals(User.UserType.EMPLOYEE)) {
+			a.setApproved(approval);
+			actDao.updateAccount(a);
+		}else {
+			throw new UnauthorizedException();
+		}
+		return approval;
 	}
 }

@@ -160,7 +160,7 @@ public class AccountDaoFile implements AccountDao {
 		int index = 0;
 		
 		for(Account acc: accList) {
-			if(acc.equals(a)) {
+			if(acc.getId().equals(a.getId())) {
 				break;
 			}
 			index++;

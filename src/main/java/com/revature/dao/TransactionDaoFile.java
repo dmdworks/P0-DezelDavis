@@ -48,16 +48,19 @@ public class TransactionDaoFile implements TransactionDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Transaction> getAllTransactions() {
 		try{
-			transOutFile = new FileOutputStream(fileLocation);
-			transOutput = new ObjectOutputStream(transOutFile);
+			transInFile = new FileInputStream(fileLocation);
+			transInput = new ObjectInputStream(transInFile);
 			
-			transOutput.writeObject(transList);
-			transOutput.close();
+			transList = (List<Transaction>)transInput.readObject();
+			transInput.close();
 		}catch(FileNotFoundException e) {
 			System.out.println("Users file is missing/in wrong location");
 		}catch(IOException e) {
+			System.out.println("An exception was thrown: "+e.getMessage());
+		}catch(ClassNotFoundException e) {
 			System.out.println("An exception was thrown: "+e.getMessage());
 		}
 		

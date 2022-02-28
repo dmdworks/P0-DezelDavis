@@ -1,6 +1,7 @@
 package com.revature.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,15 @@ public class Account implements Serializable {
 	private AccountType type;
 	private boolean approved;
 	private List<Transaction> transactions;
+	
+	public Account() {
+		this.accountId = 0;
+		this.ownerId = 0;
+		this.balance = 0.0;
+		this.type = AccountType.CHECKING;
+		this.approved = false;
+		this.transactions = new ArrayList<>();
+	}
 	
 	public Integer getId() {
 		return accountId;
