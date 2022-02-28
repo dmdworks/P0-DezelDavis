@@ -2,7 +2,7 @@ package com.revature.dao;
 
 import java.util.List;
 import java.util.ArrayList;
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -24,6 +24,45 @@ public class AccountDaoFile implements AccountDao {
 	ObjectOutputStream accOutput;
 	FileInputStream accInFile;
 	ObjectInputStream accInput;
+	
+	public AccountDaoFile() {
+		File fs = new File(fileLocation);
+		
+		if(fs.exists()) {
+			//Writing an empty array to file.
+			try{
+				accOutFile = new FileOutputStream(fileLocation);
+				accOutput = new ObjectOutputStream(accOutFile);
+				
+				accOutput.writeObject(accList);
+				accOutput.close();
+			}catch(FileNotFoundException e) {
+				System.out.println("Users file is missing/in wrong location");
+			}catch(IOException e) {
+				System.out.println("An exception was thrown: "+e.getMessage());
+			}
+
+		}else {
+			//Creating file if not found
+			try {
+				fs.createNewFile();
+			}catch(IOException e) {
+				System.out.println("File not created:"+e.getMessage());
+			}
+			
+			try{
+				accOutFile = new FileOutputStream(fileLocation);
+				accOutput = new ObjectOutputStream(accOutFile);
+				
+				accOutput.writeObject(accList);
+				accOutput.close();
+			}catch(FileNotFoundException e) {
+				System.out.println("Users file is missing/in wrong location");
+			}catch(IOException e) {
+				System.out.println("An exception was thrown: "+e.getMessage());
+			}
+		}
+	}
 
 	public Account addAccount(Account a) {
 		accList = getAccounts();
@@ -42,7 +81,7 @@ public class AccountDaoFile implements AccountDao {
 			System.out.println("An exception was thrown: "+e.getMessage());
 		}
 		
-		return null;
+		return a;
 	}
 
 	public Account getAccount(Integer actId) {
@@ -56,6 +95,7 @@ public class AccountDaoFile implements AccountDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Account> getAccounts() {
 		try{
 			accInFile = new FileInputStream(fileLocation);
@@ -75,17 +115,76 @@ public class AccountDaoFile implements AccountDao {
 	}
 
 	public List<Account> getAccountsByUser(User u) {
-		return u.getAccounts();
+		List<Account> tempAccs = new ArrayList<>();
+		accList = getAccounts();
+		
+		for(Account a : accList) {
+			if(u.getId().equals(a.getOwnerId())) {
+				tempAccs.add(a);
+			}
+		}
+		
+		return tempAccs;
 	}
 
 	public Account updateAccount(Account a) {
-		// TODO Auto-generated method stub
-		return null;
+		accList = getAccounts();
+		int index = 0;
+		
+		for(Account acc: accList) {
+			if(acc.getId().equals(a.getId())) {
+				break;
+			}
+			index++;
+		}
+		
+		accList.set(index, a);
+		
+		try{
+			accOutFile = new FileOutputStream(fileLocation);
+			accOutput = new ObjectOutputStream(accOutFile);
+			
+			accOutput.writeObject(accList);
+			accOutput.close();
+		}catch(FileNotFoundException e) {
+			System.out.println("Users file is missing/in wrong location");
+		}catch(IOException e) {
+			System.out.println("An exception was thrown: "+e.getMessage());
+		}
+		
+		return a;
 	}
 
 	public boolean removeAccount(Account a) {
-		// TODO Auto-generated method stub
-		return false;
+		accList = getAccounts();
+		int index = 0;
+		
+		for(Account acc: accList) {
+			if(acc.equals(a)) {
+				break;
+			}
+			index++;
+		}
+		
+		accList.remove(index);
+		
+		try{
+			accOutFile = new FileOutputStream(fileLocation);
+			accOutput = new ObjectOutputStream(accOutFile);
+			
+			accOutput.writeObject(accList);
+			accOutput.close();
+		}catch(FileNotFoundException e) {
+			System.out.println("Users file is missing/in wrong location");
+		}catch(IOException e) {
+			System.out.println("An exception was thrown: "+e.getMessage());
+		}
+		
+		if(accList.contains(a)) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 
 }

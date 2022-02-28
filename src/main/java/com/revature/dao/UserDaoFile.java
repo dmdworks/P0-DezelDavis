@@ -3,6 +3,8 @@ package com.revature.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -23,6 +25,46 @@ public class UserDaoFile implements UserDao {
 	ObjectOutputStream userOutput;
 	FileInputStream userInFile;
 	ObjectInputStream userInput;
+	
+	public UserDaoFile() {
+		File fs = new File(fileLocation);
+		
+		if(fs.exists()) {
+			//Writing an empty array to file.
+			try{
+				userOutFile = new FileOutputStream(fileLocation);
+				userOutput = new ObjectOutputStream(userOutFile);
+				
+				userOutput.writeObject(userList);
+				userOutput.close();
+			}catch(FileNotFoundException e) {
+				System.out.println("Users file is missing/in wrong location");
+			}catch(IOException e) {
+				System.out.println("An exception was thrown: "+e.getMessage());
+			}
+
+		}else {
+			//Creating file if not found
+			try {
+				fs.createNewFile();
+			}catch(IOException e) {
+				System.out.println("File not created:"+e.getMessage());
+			}
+			
+			try{
+				userOutFile = new FileOutputStream(fileLocation);
+				userOutput = new ObjectOutputStream(userOutFile);
+				
+				userOutput.writeObject(userList);
+				userOutput.close();
+			}catch(FileNotFoundException e) {
+				System.out.println("Users file is missing/in wrong location");
+			}catch(IOException e) {
+				System.out.println("An exception was thrown: "+e.getMessage());
+			}
+		}
+		
+	}
 
 	public User addUser(User user) {
 		userList = getAllUsers();
@@ -41,7 +83,8 @@ public class UserDaoFile implements UserDao {
 			System.out.println("An exception was thrown: "+e.getMessage());
 		}
 		
-		return null;
+		
+		return user;
 	}
 
 	public User getUser(Integer userId) {
@@ -87,13 +130,64 @@ public class UserDaoFile implements UserDao {
 	}
 
 	public User updateUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		userList = getAllUsers();
+		int index = 0;
+		
+		for(User user: userList) {
+			if(user.getId().equals(u.getId())) {
+				break;
+			}
+			index++;
+		}
+		
+		userList.set(index, u);
+		
+		try{
+			userOutFile = new FileOutputStream(fileLocation);
+			userOutput = new ObjectOutputStream(userOutFile);
+			
+			userOutput.writeObject(userList);
+			userOutput.close();
+		}catch(FileNotFoundException e) {
+			System.out.println("Users file is missing/in wrong location");
+		}catch(IOException e) {
+			System.out.println("An exception was thrown: "+e.getMessage());
+		}
+		
+		return u;
 	}
 
 	public boolean removeUser(User u) {
-		// TODO Auto-generated method stub
-		return false;
+		userList = getAllUsers();
+		int index = 0;
+		
+		for(User user: userList) {
+			if(user.getId().equals(u.getId())) {
+				break;
+			}
+			index++;
+		}
+		
+		userList.remove(index);
+		
+		try{
+			userOutFile = new FileOutputStream(fileLocation);
+			userOutput = new ObjectOutputStream(userOutFile);
+			
+			userOutput.writeObject(userList);
+			userOutput.close();
+		}catch(FileNotFoundException e) {
+			System.out.println("Users file is missing/in wrong location");
+		}catch(IOException e) {
+			System.out.println("An exception was thrown: "+e.getMessage());
+		}
+		
+		if(userList.contains(u)) {
+			return false;
+		}else {
+			return true;
+		}
+		
 	}
 
 }

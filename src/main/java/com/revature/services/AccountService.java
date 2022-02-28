@@ -1,5 +1,8 @@
 package com.revature.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.revature.beans.Account;
 import com.revature.beans.User;
 import com.revature.dao.AccountDao;
@@ -15,6 +18,8 @@ public class AccountService {
 	
 	public AccountDao actDao;
 	public static final double STARTING_BALANCE = 25d;
+	List<Account> accList = new ArrayList<>();
+	List<Transaction> transList = new ArrayList<>();
 	
 	public AccountService(AccountDao dao) {
 		this.actDao = dao;
@@ -39,7 +44,10 @@ public class AccountService {
 			newTran.setSender(a);
 			newTran.setTimestamp();
 			
-			a.getTransactions().add(newTran);
+			transList = a.getTransactions();
+			transList.add(newTran);
+			a.setTransactions(transList);
+			transList = null;
 		}
 	}
 	
@@ -63,7 +71,11 @@ public class AccountService {
 			newTran.setSender(a);
 			newTran.setTimestamp();
 			
-			a.getTransactions().add(newTran);
+			
+			transList = a.getTransactions();
+			transList.add(newTran);
+			a.setTransactions(transList);
+			transList = null;
 		}
 	}
 	
@@ -94,6 +106,16 @@ public class AccountService {
 			
 			fromAct.getTransactions().add(newTran);
 			toAct.getTransactions().add(newTran);
+			
+			transList = fromAct.getTransactions();
+			transList.add(newTran);
+			fromAct.setTransactions(transList);
+			transList = null;
+			
+			transList = toAct.getTransactions();
+			transList.add(newTran);
+			toAct.setTransactions(transList);
+			transList = null;
 		}
 		
 	}
@@ -111,7 +133,11 @@ public class AccountService {
 		newAcc.setApproved(true);
 		newAcc.setId(Math.abs(newAcc.hashCode()));
 		
-		u.getAccounts().add(newAcc);
+		accList = u.getAccounts();
+		accList.add(newAcc);
+		u.setAccounts(accList);
+		accList = null;
+		
 		return newAcc;
 	}
 	
