@@ -5,7 +5,11 @@ package com.revature.exceptions;
  * than exists in their account
  */
 public class OverdraftException extends RuntimeException {
-
 	private static final long serialVersionUID = -7168679456912742268L;
 
+	@Override
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return "Overdraft risk. Transaction cancelled.";
+	}
 }

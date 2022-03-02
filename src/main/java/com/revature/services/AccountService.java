@@ -137,15 +137,18 @@ public class AccountService {
 		newAcc.setBalance(STARTING_BALANCE);
 		newAcc.setType(Account.AccountType.CHECKING);
 		newAcc.setApproved(false);
-		newAcc.setId(Math.abs(newAcc.hashCode()));
+		newAcc.setId(Math.abs(newAcc.hashCode()+(u.getAccounts().size()*34)));
 		
 		actDao.addAccount(newAcc);
 		
 		accList = actDao.getAccountsByUser(u);
-		accList.add(newAcc);
+		if(accList.size() == 0) {
+			accList.add(newAcc);
+		}
 		u.setAccounts(accList);
 		accList = null;
 		
+
 		return newAcc;
 	}
 	

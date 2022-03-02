@@ -1,6 +1,7 @@
 package com.revature.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,16 @@ public class User implements Serializable {
 	private String lastName;
 	private UserType userType;
 	private List<Account> accounts;
+	
+	public User() {
+		this.id = 0;
+		this.username = "";
+		this.password = "";
+		this.firstName = "";
+		this.lastName = "";
+		this.userType = UserType.CUSTOMER;
+		this.accounts = new ArrayList<>();
+	}
 	
 	public Integer getId() {
 		return id;

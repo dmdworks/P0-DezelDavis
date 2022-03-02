@@ -28,21 +28,7 @@ public class AccountDaoFile implements AccountDao {
 	public AccountDaoFile() {
 		File fs = new File(fileLocation);
 		
-		if(fs.exists()) {
-			//Writing an empty array to file.
-			try{
-				accOutFile = new FileOutputStream(fileLocation);
-				accOutput = new ObjectOutputStream(accOutFile);
-				
-				accOutput.writeObject(accList);
-				accOutput.close();
-			}catch(FileNotFoundException e) {
-				System.out.println("Users file is missing/in wrong location");
-			}catch(IOException e) {
-				System.out.println("An exception was thrown: "+e.getMessage());
-			}
-
-		}else {
+		if(!fs.exists()) {
 			//Creating file if not found
 			try {
 				fs.createNewFile();

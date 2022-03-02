@@ -29,21 +29,7 @@ public class UserDaoFile implements UserDao {
 	public UserDaoFile() {
 		File fs = new File(fileLocation);
 		
-		if(fs.exists()) {
-			//Writing an empty array to file.
-			try{
-				userOutFile = new FileOutputStream(fileLocation);
-				userOutput = new ObjectOutputStream(userOutFile);
-				
-				userOutput.writeObject(userList);
-				userOutput.close();
-			}catch(FileNotFoundException e) {
-				System.out.println("Users file is missing/in wrong location");
-			}catch(IOException e) {
-				System.out.println("An exception was thrown: "+e.getMessage());
-			}
-
-		}else {
+		if(!fs.exists()) {
 			//Creating file if not found
 			try {
 				fs.createNewFile();
@@ -63,7 +49,6 @@ public class UserDaoFile implements UserDao {
 				System.out.println("An exception was thrown: "+e.getMessage());
 			}
 		}
-		
 	}
 
 	public User addUser(User user) {
