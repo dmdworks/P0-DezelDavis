@@ -18,7 +18,7 @@ import com.revature.beans.User;
  */
 public class AccountDaoFile implements AccountDao {
 	// use this file location to persist the data to
-	public static String fileLocation = "C:\\Users\\Dezel\\Desktop\\Revature Projects\\P0-DezelDavis\\Accounts.txt";
+	public static String fileLocation = "Accounts.txt";
 	List<Account> accList = new ArrayList<>();
 	FileOutputStream accOutFile;
 	ObjectOutputStream accOutput;
@@ -43,7 +43,7 @@ public class AccountDaoFile implements AccountDao {
 				accOutput.writeObject(accList);
 				accOutput.close();
 			}catch(FileNotFoundException e) {
-				System.out.println("Users file is missing/in wrong location");
+				System.out.println("Account file is missing/in wrong location");
 			}catch(IOException e) {
 				System.out.println("An exception was thrown: "+e.getMessage());
 			}

@@ -43,6 +43,7 @@ public class FileIntegrationTests extends PointWatcher {
 	public static void setupFileLocations() {
 		UserDaoFile.fileLocation = "target/integrationTests/users";
 		AccountDaoFile.fileLocation = "target/integrationTests/accounts";
+		TransactionDaoFile.fileLocation = "target/integrationTests/transaction";
 	}
 	
 	/*
@@ -71,6 +72,7 @@ public class FileIntegrationTests extends PointWatcher {
 	public void tearDown() throws IOException {
 		Files.delete(Paths.get(AccountDaoFile.fileLocation));
 		Files.delete(Paths.get(UserDaoFile.fileLocation));
+		Files.delete(Paths.get(TransactionDaoFile.fileLocation));
 	}
 	
 	@Test

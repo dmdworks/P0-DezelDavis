@@ -125,7 +125,7 @@ public class Account implements Serializable {
 	@Override
 	public String toString() {
 		return "Account [id=" + accountId + ", ownerId=" + ownerId + ", balance=" + balance + ", type=" + type + ", approved="
-				+ approved + ", transactions=" + transactions + "]";
+				+ approved + "]";//Got rid of displaying transaction array as it was giving a stackoverflow with the string builder
 	}
 	
 }

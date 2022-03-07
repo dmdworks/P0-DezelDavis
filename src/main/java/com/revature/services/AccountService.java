@@ -9,6 +9,7 @@ import com.revature.dao.AccountDao;
 import com.revature.exceptions.OverdraftException;
 
 import com.revature.beans.Transaction;
+import com.revature.dao.TransactionDaoFile;
 
 import com.revature.utils.SessionCache;
 import com.revature.exceptions.UnauthorizedException;
@@ -19,6 +20,7 @@ import com.revature.exceptions.UnauthorizedException;
 public class AccountService {
 	
 	public AccountDao actDao;
+	TransactionDaoFile tranDao = new TransactionDaoFile();
 	public static final double STARTING_BALANCE = 25d;
 	List<Account> accList = new ArrayList<>();
 	List<Transaction> transList = new ArrayList<>();
@@ -45,7 +47,7 @@ public class AccountService {
 			newTran.setAmount(amount);
 			newTran.setSender(a);
 			newTran.setTimestamp();
-			
+			tranDao.saveTransaction(newTran);
 			transList = a.getTransactions();
 			transList.add(newTran);
 			a.setTransactions(transList);
@@ -74,7 +76,7 @@ public class AccountService {
 			newTran.setAmount(amount);
 			newTran.setSender(a);
 			newTran.setTimestamp();
-			
+			tranDao.saveTransaction(newTran);
 			
 			transList = a.getTransactions();
 			transList.add(newTran);
@@ -109,6 +111,7 @@ public class AccountService {
 			newTran.setSender(fromAct);
 			newTran.setRecipient(toAct);
 			newTran.setTimestamp();
+			tranDao.saveTransaction(newTran);
 			
 			transList = fromAct.getTransactions();
 			transList.add(newTran);
@@ -140,13 +143,13 @@ public class AccountService {
 		newAcc.setId(Math.abs(newAcc.hashCode()+(u.getAccounts().size()*34)));
 		
 		actDao.addAccount(newAcc);
-		
+		/*
 		accList = actDao.getAccountsByUser(u);
 		if(accList.size() == 0) {
 			accList.add(newAcc);
 		}
 		u.setAccounts(accList);
-		accList = null;
+		accList = null;*/
 		
 
 		return newAcc;

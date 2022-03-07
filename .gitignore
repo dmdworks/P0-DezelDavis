@@ -178,5 +178,6 @@ $RECYCLE.BIN/
 Users.txt
 Accounts.txt
 Transactions.txt
+database.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java,eclipse,git,maven

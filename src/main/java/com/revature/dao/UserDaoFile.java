@@ -18,8 +18,7 @@ import com.revature.beans.User;
  * Implementation of UserDAO that reads and writes to a file
  */
 public class UserDaoFile implements UserDao {
-	
-	public static String fileLocation = "C:\\Users\\Dezel\\Desktop\\Revature Projects\\P0-DezelDavis\\Users.txt";
+	public static String fileLocation = "Users.txt";
 	List<User> userList = new ArrayList<>();
 	FileOutputStream userOutFile;
 	ObjectOutputStream userOutput;
