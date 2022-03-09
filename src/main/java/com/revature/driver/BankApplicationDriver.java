@@ -5,14 +5,16 @@ package com.revature.driver;
  */
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import com.revature.beans.*;
 import com.revature.services.*;
 
-import com.revature.dao.UserDaoFile;
+//import com.revature.dao.UserDaoFile;
 import com.revature.dao.AccountDaoDB;
-import com.revature.dao.AccountDaoFile;
+//import com.revature.dao.AccountDaoFile;
 import com.revature.dao.TransactionDaoDB;
-import com.revature.dao.TransactionDaoFile;
+//import com.revature.dao.TransactionDaoFile;
 
 import com.revature.exceptions.InvalidCredentialsException;
 import com.revature.exceptions.OverdraftException;
@@ -34,6 +36,7 @@ public class BankApplicationDriver {
 	public TransactionDaoDB tranDao = new TransactionDaoDB();
 	public UserService userSrv = new UserService(userDao, accountDao);
 	public AccountService accSrv = new AccountService(accountDao);
+	static Logger log = Logger.getLogger(BankApplicationDriver.class.getName());
 
 	public static void main(String[] args) {
 		BankApplicationDriver driver = new BankApplicationDriver();
@@ -47,7 +50,7 @@ public class BankApplicationDriver {
 				}	
 			}
 		}while(running);
-	
+		log.info("Bank application shutdown without issue.");
 	}
 	
 	public void welcomeMenu() {
@@ -232,10 +235,15 @@ public class BankApplicationDriver {
 				accid = sc.nextInt();
 				System.out.print("How much are you depositing? Enter amount: ");
 				amount = sc.nextDouble();
-				try {
-					accSrv.deposit(accSrv.actDao.getAccount(accid), amount);
-				}catch(UnsupportedOperationException e) {
-					//The deposit method will print a custom message
+				if(accSrv.actDao.getAccount(accid) == null) {
+					System.out.println("Account not found.");
+				}else {
+					try {
+						accSrv.deposit(accSrv.actDao.getAccount(accid), amount);
+						System.out.println("Deposit successfull!");
+					}catch(UnsupportedOperationException e) {
+						//The deposit method will print a custom message
+					}
 				}
 				break;
 			case 2:
@@ -243,12 +251,17 @@ public class BankApplicationDriver {
 				accid = sc.nextInt();
 				System.out.print("How much are you withdrawing? Enter amount: ");
 				amount = sc.nextDouble();
-				try {
-					accSrv.withdraw(accSrv.actDao.getAccount(accid), amount);
-				}catch(OverdraftException e) {
-					System.out.println(e.getMessage());
-				}catch(UnsupportedOperationException e) {
-					//The withdraw method will print a custom message
+				if(accSrv.actDao.getAccount(accid) == null) {
+					System.out.println("Account not found.");
+				}else {
+					try {
+						accSrv.withdraw(accSrv.actDao.getAccount(accid), amount);
+						System.out.println("Withdraw successfull!");
+					}catch(OverdraftException e) {
+						System.out.println(e.getMessage());
+					}catch(UnsupportedOperationException e) {
+						//The withdraw method will print a custom message
+					}
 				}
 				break;
 			case 3:
@@ -258,10 +271,15 @@ public class BankApplicationDriver {
 				toId = sc.nextInt();
 				System.out.print("How much are you transfering? Enter amount: ");
 				amount = sc.nextDouble();
-				try {
-					accSrv.transfer(accSrv.actDao.getAccount(accid), accSrv.actDao.getAccount(toId), amount);
-				}catch(UnsupportedOperationException e) {
-					//The transfer method will print a custom message
+				if(accSrv.actDao.getAccount(accid) == null || accSrv.actDao.getAccount(toId) == null) {
+					System.out.println("Account not found.");
+				}else {
+					try {
+						accSrv.transfer(accSrv.actDao.getAccount(accid), accSrv.actDao.getAccount(toId), amount);
+						System.out.println("Transfer successfull!");
+					}catch(UnsupportedOperationException e) {
+						//The transfer method will print a custom message
+					}
 				}
 				break;
 			case 4:

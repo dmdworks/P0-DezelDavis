@@ -1,0 +1,2 @@
+2022-03-09 11:59:50 INFO  AccountDao:66 - User made a withdraw.
+2022-03-09 12:02:00 INFO  AccountDao:66 - User made a withdraw.

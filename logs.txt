@@ -1,0 +1,20 @@
+2022-03-09 12:04:42 INFO  AccountDao:66 - User made a withdraw.
+2022-03-09 12:18:44 INFO  UserService:40 - User logged in.
+2022-03-09 12:18:57 INFO  AccountService:104 - User made a deposit.
+2022-03-09 12:45:22 DEBUG UserService:53 - A user attempted to register with taken username.
+2022-03-09 12:45:27 DEBUG UserService:53 - A user attempted to register with taken username.
+2022-03-09 12:45:34 INFO  UserService:56 - User registered.
+2022-03-09 12:45:34 INFO  UserService:40 - User logged in.
+2022-03-09 12:45:49 INFO  AccountService:177 - User made a new account.
+2022-03-09 12:46:27 INFO  AccountService:177 - User made a new account.
+2022-03-09 12:47:00 DEBUG AccountService:80 - User selected account not approved for transactions.
+2022-03-09 12:47:16 INFO  UserService:40 - User logged in.
+2022-03-09 12:47:30 INFO  AccountService:195 - Account status changed.
+2022-03-09 12:47:40 INFO  AccountService:195 - Account status changed.
+2022-03-09 12:47:40 INFO  AccountService:195 - Account status changed.
+2022-03-09 12:47:40 INFO  AccountService:195 - Account status changed.
+2022-03-09 12:47:40 INFO  AccountService:195 - Account status changed.
+2022-03-09 12:48:08 INFO  UserService:40 - User logged in.
+2022-03-09 12:48:26 INFO  AccountService:104 - User made a deposit.
+2022-03-09 12:49:01 INFO  AccountService:150 - User made a transfer.
+2022-03-09 12:50:05 INFO  BankApplicationDriver:53 - Bank application shutdown without issue.
