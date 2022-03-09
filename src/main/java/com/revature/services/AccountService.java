@@ -6,6 +6,7 @@ import java.util.List;
 import com.revature.beans.Account;
 import com.revature.beans.User;
 import com.revature.dao.AccountDao;
+import com.revature.dao.TransactionDaoDB;
 import com.revature.exceptions.OverdraftException;
 
 import com.revature.beans.Transaction;
@@ -20,7 +21,8 @@ import com.revature.exceptions.UnauthorizedException;
 public class AccountService {
 	
 	public AccountDao actDao;
-	TransactionDaoFile tranDao = new TransactionDaoFile();
+	//TransactionDaoFile tranDao = new TransactionDaoFile();
+	TransactionDaoDB tranDao = new TransactionDaoDB();
 	public static final double STARTING_BALANCE = 25d;
 	List<Account> accList = new ArrayList<>();
 	List<Transaction> transList = new ArrayList<>();
@@ -36,6 +38,7 @@ public class AccountService {
 	 */
 	public void withdraw(Account a, Double amount) {
 		if(amount < 0) {
+			System.out.println("You cannot enter a negative amount.");
 			throw new UnsupportedOperationException();
 		}else if(amount > a.getBalance()) {
 			throw new OverdraftException();
@@ -63,10 +66,12 @@ public class AccountService {
 	 */
 	public void deposit(Account a, Double amount) {
 		if (!a.isApproved()) {
+			System.out.println("This account is not yet approved for transactions.");
 			throw new UnsupportedOperationException();
 		}
 		
 		if(amount < 0) {
+			System.out.println("You cannot enter a negative amount.");
 			throw new UnsupportedOperationException();
 		}else {
 			a.setBalance(a.getBalance()+amount);
@@ -98,8 +103,10 @@ public class AccountService {
 	 */
 	public void transfer(Account fromAct, Account toAct, double amount) {
 		if( (amount < 0) || (amount > fromAct.getBalance()) ) {
+			System.out.println("You cannot enter a negative amount or have a negative balance.");
 			throw new UnsupportedOperationException();
 		}else if( !fromAct.isApproved() || !toAct.isApproved() ) {
+			System.out.println("One or more accounts is not yet approved for transactions.");
 			throw new UnsupportedOperationException();
 		}else {
 			fromAct.setBalance(fromAct.getBalance()-amount);
@@ -143,13 +150,13 @@ public class AccountService {
 		newAcc.setId(Math.abs(newAcc.hashCode()+(u.getAccounts().size()*34)));
 		
 		actDao.addAccount(newAcc);
-		/*
+		
 		accList = actDao.getAccountsByUser(u);
 		if(accList.size() == 0) {
 			accList.add(newAcc);
 		}
 		u.setAccounts(accList);
-		accList = null;*/
+		accList = null;
 		
 
 		return newAcc;

@@ -21,7 +21,7 @@ public class ConnectionUtil {
 	 * the values into the Properties variable
 	 */
 	private ConnectionUtil() {
-		File fs = new File("C:\\Users\\Dezel\\Desktop\\Revature Projects\\P0-DezelDavis\\src\\main\\resources\\database.properties");
+		File fs = new File("src/main/resources/database.properties");
 		FileReader fr;
 		try {
 			fr = new FileReader(fs);

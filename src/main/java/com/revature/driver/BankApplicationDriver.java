@@ -11,9 +11,11 @@ import com.revature.services.*;
 import com.revature.dao.UserDaoFile;
 import com.revature.dao.AccountDaoDB;
 import com.revature.dao.AccountDaoFile;
+import com.revature.dao.TransactionDaoDB;
 import com.revature.dao.TransactionDaoFile;
 
 import com.revature.exceptions.InvalidCredentialsException;
+import com.revature.exceptions.OverdraftException;
 import com.revature.exceptions.UsernameAlreadyExistsException;
 
 import com.revature.dao.UserDaoDB;
@@ -24,11 +26,12 @@ public class BankApplicationDriver {
 	static boolean loggedOn = false;
 	public Scanner sc = new Scanner(System.in);
 	public int option = 0;
-	public UserDaoFile userDao = new UserDaoFile();
-	//public UserDaoDB userDao = new UserDaoDB();
-	public AccountDaoFile accountDao = new AccountDaoFile();
-	//public AccountDaoDB accountDao = new AccountDaoDB();
-	public TransactionDaoFile tranDao = new TransactionDaoFile();
+	//public UserDaoFile userDao = new UserDaoFile();
+	public UserDaoDB userDao = new UserDaoDB();
+	//public AccountDaoFile accountDao = new AccountDaoFile();
+	public AccountDaoDB accountDao = new AccountDaoDB();
+	//public TransactionDaoFile tranDao = new TransactionDaoFile();
+	public TransactionDaoDB tranDao = new TransactionDaoDB();
 	public UserService userSrv = new UserService(userDao, accountDao);
 	public AccountService accSrv = new AccountService(accountDao);
 
@@ -69,10 +72,6 @@ public class BankApplicationDriver {
 			for(User u : userDao.getAllUsers()) {
 				System.out.println(u);
 			}
-			/*
-			UserDaoDB usdb = new UserDaoDB();
-			System.out.println(usdb.getUser(1));
-			*/
 			break;
 		case 5:
 			for(Account a : accSrv.actDao.getAccounts()) {
@@ -233,14 +232,24 @@ public class BankApplicationDriver {
 				accid = sc.nextInt();
 				System.out.print("How much are you depositing? Enter amount: ");
 				amount = sc.nextDouble();
-				accSrv.deposit(accSrv.actDao.getAccount(accid), amount);
+				try {
+					accSrv.deposit(accSrv.actDao.getAccount(accid), amount);
+				}catch(UnsupportedOperationException e) {
+					//The deposit method will print a custom message
+				}
 				break;
 			case 2:
 				System.out.print("Which account to use? Enter id: ");
 				accid = sc.nextInt();
 				System.out.print("How much are you withdrawing? Enter amount: ");
 				amount = sc.nextDouble();
-				accSrv.withdraw(accSrv.actDao.getAccount(accid), amount);
+				try {
+					accSrv.withdraw(accSrv.actDao.getAccount(accid), amount);
+				}catch(OverdraftException e) {
+					System.out.println(e.getMessage());
+				}catch(UnsupportedOperationException e) {
+					//The withdraw method will print a custom message
+				}
 				break;
 			case 3:
 				System.out.print("Which account to use? Enter id: ");
@@ -249,7 +258,11 @@ public class BankApplicationDriver {
 				toId = sc.nextInt();
 				System.out.print("How much are you transfering? Enter amount: ");
 				amount = sc.nextDouble();
-				accSrv.transfer(accSrv.actDao.getAccount(accid), accSrv.actDao.getAccount(toId), amount);
+				try {
+					accSrv.transfer(accSrv.actDao.getAccount(accid), accSrv.actDao.getAccount(toId), amount);
+				}catch(UnsupportedOperationException e) {
+					//The transfer method will print a custom message
+				}
 				break;
 			case 4:
 				return;
@@ -267,8 +280,8 @@ public class BankApplicationDriver {
 		switch(option) {
 			case 1:
 				accSrv.createNewAccount(SessionCache.getCurrentUser().get());
-				userDao.updateUser(SessionCache.getCurrentUser().get());
-				System.out.println("New account created.");
+				//userDao.updateUser(SessionCache.getCurrentUser().get()); This only needed on flat file system
+				System.out.println("New account created. Awaiting employee approval.");
 				break;
 			case 2:
 				System.out.print("Change which account's type? Enter id: ");
@@ -280,7 +293,7 @@ public class BankApplicationDriver {
 					temp.setType(Account.AccountType.CHECKING);
 				}
 				accSrv.actDao.updateAccount(temp);
-				System.out.println("Account type changed to "+temp.getType());
+				System.out.println("Account type changed to "+temp.getType()+".");
 				break;
 			case 3:
 				System.out.print("View the transactions of which account? Enter id: ");
@@ -329,6 +342,8 @@ public class BankApplicationDriver {
 			}
 			System.out.println("All accounts status changed.");
 			break;
+		case 3:
+			return;
 		default:
 			System.out.println("Invalid option.");
 		}

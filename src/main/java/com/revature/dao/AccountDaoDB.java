@@ -20,7 +20,7 @@ public class AccountDaoDB implements AccountDao {
 	private Statement stmt;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	List<User> accList = new ArrayList<>();
+	List<Account> accList = new ArrayList<>();
 	
 	public AccountDaoDB() {
 		con = ConnectionUtil.getConnectionUtil().getConnection();
@@ -74,23 +74,90 @@ public class AccountDaoDB implements AccountDao {
 	}
 
 	public List<Account> getAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT * FROM accounts";
+		
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				Account acc = new Account();
+				acc.setId(rs.getInt("acc_id"));
+				acc.setOwnerId(rs.getInt("owner_id"));
+				acc.setBalance(rs.getDouble("balance"));
+				if(rs.getInt("acc_type")==0) {
+					acc.setType(Account.AccountType.CHECKING);
+				}else {
+					acc.setType(Account.AccountType.SAVINGS);
+				}
+				acc.setApproved(rs.getBoolean("approval"));
+				accList.add(acc);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return accList;
 	}
 
 	public List<Account> getAccountsByUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT * FROM accounts WHERE owner_id="+u.getId();
+		List<Account> tempAccs = new ArrayList<>();
+		
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				Account acc = new Account();
+				acc.setId(rs.getInt("acc_id"));
+				acc.setOwnerId(rs.getInt("owner_id"));
+				acc.setBalance(rs.getDouble("balance"));
+				if(rs.getInt("acc_type")==0) {
+					acc.setType(Account.AccountType.CHECKING);
+				}else {
+					acc.setType(Account.AccountType.SAVINGS);
+				}
+				acc.setApproved(rs.getBoolean("approval"));
+				tempAccs.add(acc);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return tempAccs;
 	}
 
 	public Account updateAccount(Account a) {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "UPDATE accounts SET balance=?, acc_type=?, approval=? WHERE acc_id="+a.getId();
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setDouble(1, a.getBalance());
+			if(a.getType().equals(Account.AccountType.CHECKING)) {
+				pstmt.setInt(2, 0);
+			}else {
+				pstmt.setInt(2, 1);
+			}
+			pstmt.setBoolean(3, a.isApproved());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return a;
 	}
 
 	public boolean removeAccount(Account a) {
-		// TODO Auto-generated method stub
-		return false;
+		String query = "DELETE FROM accounts WHERE acc_id="+a.getId();
+		
+		try {
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return true;
 	}
 
 }
